@@ -1,0 +1,332 @@
+---
+title: "Week 5 - The 2-Sample T-test: Testing for Mean Differences"
+subtitle: "PSY 150: Lab Exercise "
+author: "KEY"
+date: "`r Sys.Date()`"
+output: 
+    html_document
+---
+
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, eval=TRUE)
+```
+
+------------------------------------------------------------------------
+
+Outline
+
+0. Complete the "Check-in Survey"
+1. What is effect size? (Cohen’s D)
+2. Read & clean IMDB movie rating data
+3. Create samples for each comparison (Action vs Comedy, Drama vs Comedy, Romance vs Comedy)
+4. Explore distributions by group 
+5. Visualize mean differences
+6. Run two-sample t-test models
+7. Visualize the t-distribution with critical values and observed t-statistic
+8. Practice rendering Quarto document 
+9. Create work space to start your student-led projects (& Assignment-2)
+
+------------------------------------------------------------------------
+
+### Complete Check-in Survey
+
+Answer questions thoughtfully to help me best support you this quarter!
+
+**LINK** (copy this into your web browser): https://forms.gle/fMg39Qrtf3qvbksx8
+
+------------------------------------------------------------------------
+
+### What is an `effect size`?
+
+> An effect size tells us how big a difference is on a standardized scale, so we can compare results across contexts.
+
+Cohen's (1988) effect size recommendations (Cohen's D):
+
+* small  ≈ 0.2
+* medium ≈ 0.5
+* large  ≈ 0.8
+
+> These cutoffs are rules of thumb- not hard rules. The meaning of an effect **always** depends on research context! 
+
+------------------------------------------------------------------------
+
+### Load packages & plot functions
+
+------------------------------------------------------------------------
+
+```{r}
+
+library(tidyverse)
+library(janitor)
+library(report)
+library(ggplot2movies)
+library(gt)
+
+source("load_plot_functions.R")
+
+```
+
+------------------------------------------------------------------------
+
+### Read-in data, clean, & create variables
+
+**Acknowledgement:** The code for this lab exercise was adapted from and inspired by materials authored by Andrew Heiss
+
+> Source reference: (https://github.com/andrewheiss/diff-means-half-dozen-ways?tab=readme-ov-file#data)
+
+------------------------------------------------------------------------
+
+```{r}
+
+movies_clean <- movies %>%
+  filter(***) %>% 
+  filter(str_detect(title, "^[A-Za-z]")) %>% 
+  select(***) 
+
+```
+
+
+Create 3 samples to compare ratings across each movie type comparison:
+
+1. Drop movies (rows) that were not of the specified genre or were not exclusive
+2. Group by genre (`action_comedy`, `drama_comedy`, `romance_comedy`)
+3. Randomly sample 200 movies from each group (N_total = 400)
+
+```{r}
+
+set.seed(51234)  # Set seed so that everyone ends up with same samples
+
+ac_movies <- ***
+
+dc_movies <- movies_clean %>% 
+  drop_na(drama_comedy) %>%
+  group_by(drama_comedy) %>%
+  slice_sample(n = 200) %>%
+  ungroup()
+
+rc_movies <- movies_clean %>% 
+  drop_na(romance_comedy) %>%
+  group_by(romance_comedy) %>%
+  slice_sample(n = 200) %>%
+  ungroup()
+
+```
+
+------------------------------------------------------------------------
+
+### Action v. Comedy: Which genre of movie gets higher ratings?
+
+------------------------------------------------------------------------
+
+Let's take a look at our distributions (grouped by movie type)
+```{r}
+
+plot_group_dist(
+  data = ac_movies,
+  outcome = "rating",
+  group_var = "action_comedy",
+  title = "Which genre of movie gets higher ratings?",
+  subtitle = "Sample of 400 movies from IMDB",
+  colors = c("#0288b7", "#a90010"))
+
+```
+
+**Question 1**: Describe the distributions of ratings for action & comedy movies: How are they similar or different? 
+
+**Response:** __________________________________________
+
+
+Visually check for mean differences by movie type
+```{r}
+
+mean_diff_barplot(
+  data = ac_movies,
+  outcome = "rating",
+  group_var = "action_comedy",
+  title = "Average Movie Rating",
+  colors = c("#0288b7", "#a90010"))
+
+```
+
+**Question 2**: Is the difference in average ratings practically meaningful? Explain why or why not, using the plot and your own judgment:
+
+**Response:** __________________________________________
+
+Estimate a Two Sample T-test model (Action v. Comedy)
+```{r}
+
+report(t.test(*** ~ ***, data = ac_movies, var.equal = TRUE))
+
+```
+
+**Question 3**: Explain effect size (Cohen's d) in your own words: 
+
+- Why is it useful? 
+- What does it tell us about the difference in ratings for this example?
+
+**Response:** __________________________________________
+
+
+Plot the estimated *t-statistic* on the *t-distribution* 
+```{r}
+
+plot_tdist(t_obs = -4.48, df = 398, alpha = 0.05)
+
+```
+
+**Question 4**: 
+
+- What factor changes the shape of the t-distribution? 
+- What percent of the t-distribution lies outside the critical values (dotted lines)?
+- Interpret what the meaning of the estimated t-statistic (red line): What does it tell us about the difference between groups?
+
+
+**Response:** __________________________________________
+
+------------------------------------------------------------------------
+
+### Drama V. Comedy: Which genre of movie gets higher ratings?
+
+------------------------------------------------------------------------
+
+Let's take a look at our distributions (grouped by movie type)
+```{r}
+
+plot_group_dist(
+  data = dc_movies,
+  outcome = "rating",
+  group_var = "drama_comedy",
+  title = "Which genre of movie gets higher ratings?",
+  subtitle = "Sample of 400 movies from IMDB",
+  colors = c("***", "#a90010"))
+
+```
+
+Visually check mean rating differences between movie genre groups
+```{r}
+
+mean_diff_barplot(
+  data = dc_movies,
+  outcome = "rating",
+  group_var = "drama_comedy",
+  title = "Average Movie Rating",
+  colors = c("***", "#a90010"))
+
+```
+
+Estimate a Two Sample T-test model  (Drama v. Comedy)
+```{r}
+
+report(t.test(*** ~ ***, data = dc_movies, var.equal = TRUE))
+
+```
+
+**Question 5**: 
+
+- Is the estimated *t-statistic* above or below the *critical values* when alpha is .05?
+
+**Response:** __________________________________________
+
+Plot the estimated *t-statistic* on the *t-distribution* 
+```{r}
+plot_tdist(t_obs = ***, df = ***, alpha = ***)
+```
+
+**Question 6**: 
+
+- [If you change `alpha` to .01] What percent of the t-distribution lies outside the critical values (dotted lines)?
+- Interpret what the meaning of the estimated t-statistic (red line): What does it tell us about the difference between groups?
+
+**Response:** __________________________________________
+
+------------------------------------------------------------------------
+
+### Romance V. Comedy: Which genre of movie gets higher ratings?
+
+------------------------------------------------------------------------
+
+Let's take a look at our distributions (grouped by movie type)
+```{r}
+
+plot_group_dist(
+  data = rc_movies,
+  outcome = "rating",
+  group_var = "romance_comedy",
+  title = "Which genre of movie gets higher ratings?",
+  subtitle = "Sample of 400 movies from IMDB",
+  colors = c("***", "#a90010"))
+
+```
+
+Visually check mean rating differences between movie genre groups
+```{r}
+
+mean_diff_barplot(
+  data = rc_movies,
+  outcome = "rating",
+  group_var = "romance_comedy",
+  title = "Average Movie Rating",
+  colors = c("***", "#a90010"))
+
+```
+
+Estimate a Two Sample T-test model (Romance v. Comedy)
+```{r}
+
+report(t.test(*** ~ ***, data = rc_movies, var.equal = TRUE))
+
+```
+
+**Question 7**: Is the estimated *t-statistic* above or below the *critical values* when alpha is .05?
+
+**Response:** __________________________________________
+
+
+Plot the estimated *t-statistic* on the *t-distribution* 
+```{r}
+
+plot_tdist(t_obs = ***, df = ***, alpha = ***)
+
+```
+
+**Question 8**: Interpret what the meaning of the estimated t-statistic (red line): What does it tell us about the difference between groups?
+
+**Response:** __________________________________________
+
+------------------------------------------------------------------------
+
+### Practice rendering the Quarto document - Create an HTML file displaying all plots & code!
+
+> Try clicking 'Render' in the top menu (Note: All code must be completed to successfully render)
+
+------------------------------------------------------------------------
+
+### Create a work space to begin your student-led projects & Assignment-1
+
+> [AND] Practice cleaning an example data set
+
+LINK (copy this into your web browser): 
+
+https://posit.cloud/spaces/695065/content/11118691
+
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
