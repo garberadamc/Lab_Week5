@@ -18,7 +18,7 @@ Outline
 0. Complete the "Check-in Survey"
 1. What is effect size? (Cohen’s D)
 2. Read & clean IMDB movie rating data
-3. Create samples for each comparison (Action vs Comedy, Drama vs Comedy, Romance vs Comedy)
+3. Create samples for each comparison group (e.g., Action vs Comedy)
 4. Explore distributions by group 
 5. Visualize mean differences
 6. Run two-sample t-test models
@@ -32,7 +32,7 @@ Outline
 
 Answer questions thoughtfully to help me best support you this quarter!
 
-**LINK** (copy this into your web browser): https://forms.gle/fMg39Qrtf3qvbksx8
+**LINK (copy into browser)**: https://forms.gle/8jfCAwj2DkxE6qm8A
 
 ------------------------------------------------------------------------
 
@@ -140,9 +140,9 @@ Visually check for mean differences by movie type
 ```{r}
 
 mean_diff_barplot(
-  data = ac_movies,
-  outcome = "rating",
-  group_var = "action_comedy",
+  data = ***,
+  outcome = "***",
+  group_var = "***",
   title = "Average Movie Rating",
   colors = c("#0288b7", "#a90010"))
 
@@ -193,12 +193,12 @@ Let's take a look at our distributions (grouped by movie type)
 ```{r}
 
 plot_group_dist(
-  data = dc_movies,
-  outcome = "rating",
-  group_var = "drama_comedy",
+  data = ***,
+  outcome = "***",
+  group_var = "***",
   title = "Which genre of movie gets higher ratings?",
   subtitle = "Sample of 400 movies from IMDB",
-  colors = c("***", "#a90010"))
+  colors = c("darkgreen", "#a90010"))
 
 ```
 
@@ -210,7 +210,7 @@ mean_diff_barplot(
   outcome = "rating",
   group_var = "drama_comedy",
   title = "Average Movie Rating",
-  colors = c("***", "#a90010"))
+  colors = c("darkgreen", "#a90010"))
 
 ```
 
@@ -249,12 +249,12 @@ Let's take a look at our distributions (grouped by movie type)
 ```{r}
 
 plot_group_dist(
-  data = rc_movies,
-  outcome = "rating",
-  group_var = "romance_comedy",
+  data = ***,
+  outcome = "***",
+  group_var = "***",
   title = "Which genre of movie gets higher ratings?",
   subtitle = "Sample of 400 movies from IMDB",
-  colors = c("***", "#a90010"))
+  colors = c("purple3", "#a90010"))
 
 ```
 
@@ -266,7 +266,7 @@ mean_diff_barplot(
   outcome = "rating",
   group_var = "romance_comedy",
   title = "Average Movie Rating",
-  colors = c("***", "#a90010"))
+  colors = c("purple3", "#a90010"))
 
 ```
 
@@ -301,15 +301,6 @@ plot_tdist(t_obs = ***, df = ***, alpha = ***)
 
 ------------------------------------------------------------------------
 
-### Create a work space to begin your student-led projects & Assignment-1
-
-> [AND] Practice cleaning an example data set
-
-LINK (copy this into your web browser): 
-
-https://posit.cloud/spaces/695065/content/11118691
-
-------------------------------------------------------------------------
 
 
 

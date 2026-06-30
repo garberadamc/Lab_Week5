@@ -309,7 +309,7 @@ plot_group_dist <- function(data, outcome, group_var, title,
     stat_density_ridges(quantile_lines = TRUE, quantiles = 2, scale = 3, color = "white") +
     scale_fill_manual(values = colors, guide = FALSE) +
     scale_x_continuous(breaks = seq(0, 10, 2)) +
-    labs(x = x_lab, y = NULL, subtitle = "White line shows median rating") +
+    labs(x = x_lab, y = NULL) +
     theme_fancy()
   
   # assemble like original
